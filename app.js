@@ -1,4 +1,3 @@
-/* eslint-disable linebreak-style */
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
@@ -9,10 +8,10 @@ const routesUsers = require('./routes/users');
 const routesMovies = require('./routes/movies');
 const auth = require('./middlewares/auth');
 const { login, createUser } = require('./controllers/users');
-const { validateLogin, validateCreateUser } = require('./middlewares/validation');
+const { signup, signin } = require('./middlewares/validation');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
-const { STATUS_INTERNAL_SERVER_ERROR } = require('./utils/constants');
-const NotFoundError = require('./errors/NotFoundError');
+const { SERVER_ERROR, NOT_FOUND_ERROR } = require('./middlewares/errors');
+const rateLimiter = require('./rateLimiter/limiter');
 
 const { PORT = 3001 } = process.env;
 const DATABASE_URL = 'mongodb://127.0.0.1:27017/moviesdb';
@@ -39,31 +38,24 @@ app.get('/crash-test', () => {
   }, 0);
 });
 
+app.use(rateLimiter);
 app.use(cookieParser());
 app.use(requestLogger);
 
-app.post('/signup', validateCreateUser, createUser);
-app.post('/signin', validateLogin, login);
+app.post('/signup', signup, createUser);
+app.post('/signin', signin, login);
 
 app.use(auth);
 
 app.use('/users', routesUsers);
 app.use('/movies', routesMovies);
 
-app.use('*', (req, res, next) => {
-  const error = new NotFoundError('Запрашиваемый ресурс не найден');
-  next(error);
-});
+app.use('*', NOT_FOUND_ERROR);
 
 app.use(errorLogger);
 app.use(errors());
 
-app.use((err, req, res, next) => {
-  const statusCode = err.status || STATUS_INTERNAL_SERVER_ERROR;
-  const message = statusCode === STATUS_INTERNAL_SERVER_ERROR ? 'На сервере произошла ошибка' : err.message;
-  res.status(statusCode).send({ message });
-  next();
-});
+app.use(SERVER_ERROR);
 
 app.listen(PORT, () => {
   console.log(`App listening on port ${PORT}`);

@@ -1,4 +1,3 @@
-/* eslint-disable linebreak-style */
 const Movie = require('../models/movie');
 const NotFoundError = require('../errors/NotFoundError');
 const ValidationError = require('../errors/ValidationError');
@@ -23,8 +22,8 @@ module.exports.createMovie = (req, res, next) => {
     trailerLink,
     nameRU,
     nameEN,
-    thumbnail,
     movieId,
+    thumbnail,
   } = req.body;
   const owner = req.user._id;
 

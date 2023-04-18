@@ -1,4 +1,3 @@
-/* eslint-disable linebreak-style */
 const STATUS_OK = 200;
 const STATUS_BAD_REQUEST = 400;
 const STATUS_FORBIDDEN_ERROR = 403;

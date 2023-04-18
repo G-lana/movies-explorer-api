@@ -1,4 +1,3 @@
-/* eslint-disable linebreak-style */
 require('dotenv').config();
 
 const { NODE_ENV, JWT_SECRET } = process.env;

@@ -1,4 +1,3 @@
-/* eslint-disable linebreak-style */
 require('dotenv').config();
 
 const bcrypt = require('bcryptjs');
@@ -41,6 +40,9 @@ module.exports.updateProfile = (req, res, next) => {
     .catch((err) => {
       if (err.name === 'ValidationError') {
         return next(new ValidationError('Переданы некорректные данные в метод обновления профиля пользователя'));
+      }
+      if (err.code === 11000) {
+        return next(new ConflictError('Пользователь с таким email уже существует'));
       }
       return next(err);
     });
@@ -101,6 +103,17 @@ module.exports.login = (req, res, next) => {
             email: user.email,
           });
         });
+    })
+    .catch((err) => {
+      next(err);
+    });
+};
+
+module.exports.logout = (req, res, next) => {
+  User.findById(req.user._id)
+    .then(() => {
+      res.clearCookie('token');
+      res.send({ message: 'Вы успешно вышли из аккаунта' });
     })
     .catch((err) => {
       next(err);
