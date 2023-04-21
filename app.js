@@ -11,7 +11,6 @@ const { login, createUser } = require('./controllers/users');
 const { signup, signin } = require('./middlewares/validation');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
 const { SERVER_ERROR, NOT_FOUND_ERROR } = require('./middlewares/errors');
-const rateLimiter = require('./rateLimiter/limiter');
 
 const { PORT = 3001 } = process.env;
 const DATABASE_URL = 'mongodb://127.0.0.1:27017/moviesdb';
@@ -38,7 +37,6 @@ app.get('/crash-test', () => {
   }, 0);
 });
 
-app.use(rateLimiter);
 app.use(cookieParser());
 app.use(requestLogger);
 
