@@ -7,7 +7,7 @@ const bodyParser = require('body-parser');
 const routesUsers = require('./routes/users');
 const routesMovies = require('./routes/movies');
 const auth = require('./middlewares/auth');
-const { login, createUser } = require('./controllers/users');
+const { login, createUser, logout } = require('./controllers/users');
 const { signup, signin } = require('./middlewares/validation');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
 const { SERVER_ERROR, NOT_FOUND_ERROR } = require('./middlewares/errors');
@@ -45,6 +45,7 @@ app.post('/signin', signin, login);
 
 app.use(auth);
 
+app.post('./signout', logout);
 app.use('/users', routesUsers);
 app.use('/movies', routesMovies);
 

@@ -20,12 +20,12 @@ const postMovie = celebrate({
     country: Joi.string().required(),
     director: Joi.string().required(),
     duration: Joi.number().required(),
-    year: Joi.number().required(),
+    year: Joi.string().required(),
     description: Joi.string().required(),
-    image: Joi.string().required(),
-    trailerLink: Joi.string().required(),
-    thumbnail: Joi.string().required(),
-    movieId: Joi.number().required(),
+    image: Joi.string().required().regex(/https?:\/\/(www)?[0-9a-z\-._~:/?#[\]@!$&'()*+,;=]+#?$/i),
+    trailerLink: Joi.string().required().regex(/https?:\/\/(www)?[0-9a-z\-._~:/?#[\]@!$&'()*+,;=]+#?$/i),
+    thumbnail: Joi.string().required().regex(/https?:\/\/(www)?[0-9a-z\-._~:/?#[\]@!$&'()*+,;=]+#?$/i),
+    movieId: Joi.number().required().unsafe(),
     nameRU: Joi.string().required(),
     nameEN: Joi.string().required(),
   }),
@@ -33,14 +33,14 @@ const postMovie = celebrate({
 
 const removeMovie = celebrate({
   params: Joi.object().keys({
-    MovieId: Joi.number().required(),
+    _id: Joi.string().hex().length(24),
   }),
 });
 
 const updateUserInfo = celebrate({
   body: Joi.object().keys({
-    email: Joi.string().email(),
-    name: Joi.string().min(2).max(30),
+    email: Joi.string().email().required(),
+    name: Joi.string().min(2).max(30).required(),
   }),
 });
 

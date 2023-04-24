@@ -4,7 +4,8 @@ const ValidationError = require('../errors/ValidationError');
 const ForbiddenError = require('../errors/ForbiddenError');
 
 module.exports.getMovies = (req, res, next) => {
-  Movie.find({})
+  const owner = req.user._id;
+  Movie.find({ owner })
     .then((movies) => res.send({ data: movies }))
     .catch((err) => {
       next(err);
@@ -53,9 +54,9 @@ module.exports.createMovie = (req, res, next) => {
 };
 
 module.exports.deleteMovie = (req, res, next) => {
-  const { movieId } = req.params;
+  const { id } = req.params._id;
 
-  Movie.findById(movieId)
+  Movie.findById(id)
     .then((movie) => {
       if (!movie) {
         throw new NotFoundError('Фильм не найден');
@@ -63,7 +64,7 @@ module.exports.deleteMovie = (req, res, next) => {
       if (movie.owner.toString() !== req.user._id) {
         throw new ForbiddenError('Удаление чужого фильма запрещено');
       }
-      return Movie.findByIdAndRemove(movieId)
+      return Movie.findByIdAndRemove(id)
         .then((myMovie) => {
           res.send({ data: myMovie });
         })

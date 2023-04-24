@@ -4,6 +4,6 @@
 
 ## Ссылки на проект 
 
-IP 158.160.56.174 
+IP 158.160.104.210 
 
 Backend https://api.movies.lana.nomoredomains.monster
