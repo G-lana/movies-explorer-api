@@ -45,7 +45,7 @@ app.post('/signin', signin, login);
 
 app.use(auth);
 
-app.post('./signout', logout);
+app.post('/signout', logout);
 app.use('/users', routesUsers);
 app.use('/movies', routesMovies);
 
